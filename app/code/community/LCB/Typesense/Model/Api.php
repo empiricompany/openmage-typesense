@@ -39,8 +39,8 @@ class LCB_Typesense_Model_Api
                 'nodes' => [
                     [
                         'host' => $apiHost,
-                        'port' => '443',
-                        'protocol' => 'https',
+                        'port' => '8108',
+                        'protocol' => 'http',
                     ],
                 ],
                 'client' => new HttplugClient(),
@@ -64,8 +64,8 @@ class LCB_Typesense_Model_Api
                 'nodes' => [
                     [
                         'host' => $apiHost,
-                        'port' => '443',
-                        'protocol' => 'https',
+                        'port' => '8108',
+                        'protocol' => 'http',
                     ],
                 ],
                 'client' => new HttplugClient(),
@@ -246,10 +246,11 @@ class LCB_Typesense_Model_Api
             $queryBy = ['name'];
             $attributes = Mage::getResourceModel('lcb_typesense/catalog_product_attribute_collection')->addSearchableAttributeFilter();
             foreach ($attributes as $attribute) {
-                if (!in_array($attribute->getAttributeCode(), ['status', 'visibility'])) {
+                if (!in_array($attribute->getAttributeCode(), ['status', 'visibility']) && $attribute->getTypesenseType() === 'string') {
                     $queryBy[] = $attribute->getAttributeCode();
                 }
             }
+            $queryBy = array_unique($queryBy);
 
             $payload = [
                 'q' => $query,
